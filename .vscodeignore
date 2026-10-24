@@ -15,3 +15,5 @@ src/test/**
 .vscode-test/**
 **/*.vsix
 tokyo-snow-demo.js
+images/**
+tokyo-snow-banner.jpg
