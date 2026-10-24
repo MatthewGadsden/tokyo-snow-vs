@@ -1,0 +1,43 @@
+{
+  "name": "tokyo-snow-vs",
+  "displayName": "Tokyo Snow",
+  "description": "A warm, dark VS Code theme sampled from a snowy Tokyo alley at night: lit vending machines against snow and shadowed pavement",
+  "version": "1.0.0",
+  "publisher": "MatthewGadsden",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "keywords": [
+    "dark",
+    "tokyo",
+    "snow",
+    "night",
+    "warm",
+    "amber",
+    "gruvbox",
+    "vending machine",
+    "atmospheric"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Tokyo Snow",
+        "uiTheme": "vs-dark",
+        "path": "./themes/tokyo-snow-color-theme.json"
+      }
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MatthewGadsden/tokyo-snow-vs"
+  },
+  "bugs": {
+    "url": "https://github.com/MatthewGadsden/tokyo-snow-vs/issues"
+  },
+  "homepage": "https://github.com/MatthewGadsden/tokyo-snow-vs#readme",
+  "license": "MIT",
+  "icon": "icon.png"
+}
