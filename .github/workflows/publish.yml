@@ -2,7 +2,8 @@
 # version tag (v1.2.3) is pushed:
 #
 #   1. bump "version" in package.json and commit
-#   2. git tag v1.2.3 && git push --follow-tags
+#   2. git tag v1.2.3 && git push origin v1.2.3
+#      (--follow-tags would skip it: it only pushes annotated tags)
 #      (or create a release with a new v1.2.3 tag on github.com; that pushes the tag too)
 #
 # Publishing needs these repository secrets (Settings > Secrets and variables >
