@@ -1,0 +1,96 @@
+# Packages the theme on every push and pull request, and publishes it when a
+# version tag (v1.2.3) is pushed:
+#
+#   1. bump "version" in package.json and commit
+#   2. git tag v1.2.3 && git push --follow-tags
+#      (or create a release with a new v1.2.3 tag on github.com; that pushes the tag too)
+#
+# Publishing needs these repository secrets (Settings > Secrets and variables >
+# Actions). A registry whose secret is missing is skipped.
+#
+#   VSCE_PAT  Azure DevOps token with Marketplace > Manage scope (Visual Studio Marketplace)
+#   OVSX_PAT  open-vsx.org access token (Open VSX, used by Code - OSS and VSCodium)
+name: Publish
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  VSCE: "@vscode/vsce@4.0.0"
+  OVSX: "ovsx@1.2.0"
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    outputs:
+      vsix: ${{ steps.pack.outputs.vsix }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Check tag matches package.json version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package.json version $version"
+            exit 1
+          fi
+
+      - name: Package
+        id: pack
+        run: |
+          vsix="$(node -p "require('./package.json').name")-$(node -p "require('./package.json').version").vsix"
+          npx --yes "$VSCE" package --out "$vsix"
+          echo "vsix=$vsix" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: vsix
+          path: ${{ steps.pack.outputs.vsix }}
+          if-no-files-found: error
+
+  publish:
+    needs: package
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      VSIX: ${{ needs.package.outputs.vsix }}
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      OVSX_PAT: ${{ secrets.OVSX_PAT }}
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: vsix
+
+      - name: Publish to Visual Studio Marketplace
+        if: env.VSCE_PAT != ''
+        run: npx --yes "$VSCE" publish --packagePath "$VSIX"
+
+      - name: Publish to Open VSX
+        if: env.OVSX_PAT != ''
+        run: npx --yes "$OVSX" publish "$VSIX"
+
+      - name: Attach .vsix to a GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # a release drafted on github.com already exists; a pushed tag needs one
+          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$VSIX" --repo "$GITHUB_REPOSITORY" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$VSIX" --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes
+          fi
