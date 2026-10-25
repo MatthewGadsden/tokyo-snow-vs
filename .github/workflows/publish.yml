@@ -11,6 +11,9 @@
 #
 #   VSCE_PAT  Azure DevOps token with Marketplace > Manage scope (Visual Studio Marketplace)
 #   OVSX_PAT  open-vsx.org access token (Open VSX, used by Code - OSS and VSCodium)
+#
+# Both publish steps pass --skip-duplicate, so a failed run can be re-run: a
+# registry that already has the version is skipped instead of failing the job.
 name: Publish
 
 on:
@@ -79,11 +82,11 @@ jobs:
 
       - name: Publish to Visual Studio Marketplace
         if: env.VSCE_PAT != ''
-        run: npx --yes "$VSCE" publish --packagePath "$VSIX"
+        run: npx --yes "$VSCE" publish --packagePath "$VSIX" --skip-duplicate
 
       - name: Publish to Open VSX
         if: env.OVSX_PAT != ''
-        run: npx --yes "$OVSX" publish "$VSIX"
+        run: npx --yes "$OVSX" publish "$VSIX" --skip-duplicate
 
       - name: Attach .vsix to a GitHub release
         env:
