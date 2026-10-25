@@ -2,7 +2,7 @@
   "name": "tokyo-snow-vs",
   "displayName": "Tokyo Snow",
   "description": "A warm, dark VS Code theme sampled from a snowy Tokyo alley at night: lit vending machines against snow and shadowed pavement",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "MatthewGadsden",
   "engines": {
     "vscode": "^1.74.0"

@@ -48,7 +48,7 @@ Tokyo Snow isn't on the Visual Studio Marketplace yet, so install it from this r
    ```sh
    cd tokyo-snow-vs
    npx @vscode/vsce package
-   code --install-extension tokyo-snow-vs-1.0.0.vsix
+   code --install-extension tokyo-snow-vs-1.0.1.vsix
    ```
 4. Restart Visual Studio Code, or run "Developer: Reload Window"
 5. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac) to open the command palette
