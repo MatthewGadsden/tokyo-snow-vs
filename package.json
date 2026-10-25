@@ -16,6 +16,7 @@
     "snow",
     "night",
     "warm",
+    "neon",
     "amber",
     "gruvbox",
     "vending machine",
@@ -27,6 +28,16 @@
         "label": "Tokyo Snow",
         "uiTheme": "vs-dark",
         "path": "./themes/tokyo-snow-color-theme.json"
+      },
+      {
+        "label": "Tokyo Snow Neon Alley",
+        "uiTheme": "vs-dark",
+        "path": "./themes/tokyo-snow-neon-alley-color-theme.json"
+      },
+      {
+        "label": "Tokyo Snow Vending Glow",
+        "uiTheme": "vs-dark",
+        "path": "./themes/tokyo-snow-vending-glow-color-theme.json"
       }
     ]
   },
